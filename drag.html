@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="css/bootstrap.css" rel="stylesheet" > 
+<link href="css/weather.css" rel="stylesheet" > 
+<script src="jquery-1.11.1.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<style type="text/css">
+    * {padding:0;margin:0;}
+    #content{
+        width      : 600px;
+        height     : 300px;
+        background : rgba(125,125,125,0.2);
+        position   : absolute;
+        margin-left: -300px;
+        margin-top : -150px;
+        left       :50%;
+        top        :50%;
+        background :#EEE; 
+    }
+    #logo{
+        background:#428fff;
+        height: 30px;
+    }
+
+    #Drag_block{
+        width: 50px;
+        height: 50px;
+        background: black;
+        position: absolute;
+    }
+
+    #Drag_block:hover{
+        cursor: Move;
+    }
+    
+</style>
+</head>
+<body style="background-color: #000;">
+    <div id="content" class="container">
+        <div class="col-lg-1" id="logo"></div>
+        <div id="Drag_block"></div>
+    </div>
+
+
+<script>
+   $(function(){
+        /**
+         * [dragFun drag obj]
+         * @param  {[type]} dragObjID [objid]
+         * @param  {[type]} RangeID   [rangeid]
+         * @return {[type]}           [none]
+         * new obj
+         */
+        var dragFun = function(dragObjID,RangeID){
+            var $element = $("#"+dragObjID);
+            var $container = $("#"+RangeID);
+            var obj = {
+                _drag   : false,
+                B_point : {x:0,y:0},
+                A_point : {x:0,y:0},
+                leftx   : 0,
+                topy    : 0
+            }
+
+            $element.mousedown(function(event) {
+                var x = y = 0 ;
+
+                //get div's position
+                obj.leftx = $(this).position().left;
+                obj.topy = $(this).position().top;
+
+                //before moving div' s position 
+                x = event.clientX;
+                y = event.clientY;
+                obj.B_point.x = x;
+                obj.B_point.y = y;
+                console.log("X:"+x+"----Y:"+y);
+                $(this).css("background-color","#999");
+                obj._drag = true;
+             }),
+
+            $(document).mouseup(function(event) {
+                $element.css("background-color","#000");
+                obj._drag = false;
+            }),
+
+            $container.mousemove(function(event){
+                var x = y = dx = dy = 0 ;
+
+                //after moving div' s position 
+                x = event.clientX;
+                y = event.clientY;
+                obj.A_point.x = x;
+                obj.A_point.y = y;
+
+                if(obj._drag){
+                    dx = obj.A_point.x - obj.B_point.x;
+                    dy = obj.A_point.y - obj.B_point.y;
+                    console.log("dx:"+dx+"----dy:"+dy);
+
+                    //change div's position
+                    var _left = obj.leftx + dx;
+                    var _top = obj.topy + dy;
+
+                    $element.animate({
+                        left :  _left + "px",
+                        top  : _top + "px"
+                    },0);
+                     console.log("left:"+_left+"------topy:"+_top);
+                }
+                
+            })
+        }
+
+
+        //调用接口
+        var _dragfun = new dragFun("Drag_block","content");
+         console.log("_dragfun:");
+
+        // var gVar = {}; //global
+        // gVar._drag = false;
+        // gVar.B_point = {x:0,y:0};
+        // gVar.A_point = {x:0,y:0};
+        // gVar.leftx = 0;
+        // gVar.topy = 0;
+        
+
+        // $("#Drag_block").mousedown(function(event) {
+        //     var x = y = 0 ;
+
+        //     //get div's position
+        //     gVar.leftx = $("#Drag_block").position().left;
+        //     gVar.topy = $("#Drag_block").position().top;
+
+        //     //before moving div' s position 
+        //     x = event.clientX;
+        //     y = event.clientY;
+        //     gVar.B_point.x = x;
+        //     gVar.B_point.y = y;
+        //     console.log("X:"+x+"----Y:"+y);
+        //     $(this).css("background-color","#999");
+        //     gVar._drag = true;
+        // });
+
+        // $(document).mouseup(function(event) {
+        //     $("#Drag_block").css("background-color","#000");
+        //     gVar._drag = false;
+        // });
+
+        // $("#content").mousemove(function(event){
+        //     var x = y = dx = dy = 0 ;
+
+        //     //after moving div' s position 
+        //     x = event.clientX;
+        //     y = event.clientY;
+        //     gVar.A_point.x = x;
+        //     gVar.A_point.y = y;
+
+        //     if(gVar._drag){
+        //         dx = gVar.A_point.x - gVar.B_point.x;
+        //         dy = gVar.A_point.y - gVar.B_point.y;
+        //         console.log("dx:"+dx+"----dy:"+dy);
+
+        //         //change div's position
+        //         var _left = gVar.leftx + dx;
+        //         var _top = gVar.topy + dy;
+
+        //         $("#Drag_block").animate({
+        //             left :  _left + "px",
+        //             top  : _top + "px"
+        //         },0);
+        //          console.log("left:"+_left+"------topy:"+_top);
+        //     }
+            
+        // });
+
+
+
+   })
+</script>
+</body>
+</html>
